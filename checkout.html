@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout - CMS</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand" href="user-dashboard.html">CMS</a>
+    <button class="btn btn-danger ms-auto" id="logoutBtn">Logout</button>
+  </div>
+</nav>
+
+<div class="container mt-5">
+  <h2>Checkout</h2>
+  <div id="course-details" class="card p-3 mb-3"></div>
+  <button id="enrollBtn" class="btn btn-success">Confirm Enrollment</button>
+</div>
+
+<script>
+const API_URL = "http://localhost:3000";
+const urlParams = new URLSearchParams(window.location.search);
+const courseId = urlParams.get('id');
+
+document.getElementById('logoutBtn').addEventListener('click', () => {
+  localStorage.removeItem('user');
+  window.location.href = 'login.html';
+});
+
+async function loadCourse() {
+  const res = await fetch(`${API_URL}/courses/${courseId}`);
+  const course = await res.json();
+  document.getElementById('course-details').innerHTML = `
+    <h4>${course.name}</h4>
+    <p>Category: ${course.category}</p>
+    <p>Price: ₹${course.price}</p>
+    <img src="${course.image}" class="img-fluid" style="max-width:200px;">
+  `;
+}
+
+document.getElementById('enrollBtn').addEventListener('click', () => {
+  alert('Enrollment successful!');
+  window.location.href = 'user-dashboard.html';
+});
+
+loadCourse();
+</script>
+</body>
+</html>
